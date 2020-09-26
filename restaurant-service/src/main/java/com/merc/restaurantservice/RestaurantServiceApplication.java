@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -18,6 +20,7 @@ import reactor.netty.tcp.TcpClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableEncryptableProperties
 public class RestaurantServiceApplication {
 
 	@Value("${here.maps.base.url}")
