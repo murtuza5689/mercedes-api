@@ -1,4 +1,4 @@
-package com.merc.restaurantservice.model;
+package com.merc.chargingstationservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantWrapper {
+public class ResponseWrapper {
 
 	@JsonProperty("results")
-	private RestaurantData results;
+	private ChargingStationData results;
 }

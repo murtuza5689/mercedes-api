@@ -1,8 +1,8 @@
-package com.merc.searchapi.model;
+package com.merc.chargingstationservice.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class RestaurantData {
+public class ChargingStationData {
 
 	@JsonProperty("items")
-	private List<Restaurant> restaurants;
+	@JsonAlias("chargingStations")
+	private List<Item> chargingStations;
 }

@@ -20,7 +20,7 @@ public class RestaurantController {
 
 	@GetMapping("/v1/restaurant/{loc}")
 	public Mono<RestaurantData> getAll(@PathVariable("loc") String loc) {
-		return restaurantService.search(loc);
+		return restaurantService.getAll(loc);
 	}
 	
 	

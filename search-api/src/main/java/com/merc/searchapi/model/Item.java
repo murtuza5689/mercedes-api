@@ -1,6 +1,6 @@
 package com.merc.searchapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Restaurant {
+public class Item {
 
-	private String id;
 	private Long distance;
 	@JsonProperty("title")
+	@JsonAlias("name")
 	private String name;
 	private boolean isOpen;
+	
 }

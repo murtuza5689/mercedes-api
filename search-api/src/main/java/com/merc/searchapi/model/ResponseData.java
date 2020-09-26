@@ -1,8 +1,7 @@
-package com.merc.restaurantservice.model;
+package com.merc.searchapi.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -12,9 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantData {
+public class ResponseData {
 
 	@JsonProperty("items")
-	@JsonAlias("restaurants")
-	private List<Item> restaurants;
+	private List<Item> items;
 }
