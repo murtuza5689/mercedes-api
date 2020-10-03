@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseData {
+public class DataWrapper {
 
 	@JsonProperty("items")
-	private List<ResponseItem> items;
+	private List<Item> items;
 }

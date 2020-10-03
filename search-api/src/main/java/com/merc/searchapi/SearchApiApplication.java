@@ -7,8 +7,11 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableEncryptableProperties
 public class SearchApiApplication {
 
 	public static void main(String[] args) {
@@ -20,5 +23,5 @@ public class SearchApiApplication {
 	public WebClient.Builder webClient() {
 		return WebClient.builder();
 	}
-
+	
 }

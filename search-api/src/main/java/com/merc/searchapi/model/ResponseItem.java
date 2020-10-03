@@ -1,7 +1,6 @@
 package com.merc.searchapi.model;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -11,8 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseData {
+public class ResponseItem {
 
-	@JsonProperty("items")
-	private List<ResponseItem> items;
+	private Long distance;
+	@JsonProperty("title")
+	@JsonAlias("name")
+	private String name;
+
 }

@@ -1,7 +1,6 @@
 package com.merc.searchapi.service;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.merc.searchapi.constant.ApiConstants;
-import com.merc.searchapi.model.Item;
+import com.merc.searchapi.helper.FallBackHelper;
+import com.merc.searchapi.model.DataWrapper;
 import com.merc.searchapi.model.ResponseData;
+import com.merc.searchapi.model.ResponseItem;
 import com.merc.searchapi.model.SearchResults;
 
 import reactor.core.publisher.Mono;
@@ -27,26 +28,44 @@ public class SearchService {
 	@Value("${restaurant.service.base.url}")
 	private String restaurant_service_baseURL;
 
-	@Value("${parking-spot.service.base.url}")
-	private String parking_spot_service_baseURL;
-
 	@Value("${charging-station.service.base.url}")
 	private String charging_station_service_baseURL;
-
+	
+	@Value("${here.maps.geocode.url}")
+	private String geolocation_baseURL;
+	
+	@Value("${apiKey}")
+	private String apiKey;
+	
 	@Autowired
 	private WebClient.Builder clientBuilder;
-
+	
 	public SearchService(ReactiveCircuitBreakerFactory rcbf) {
 		this.rcb = rcbf.create("search-rcb");
 	}
 
 	public Mono<SearchResults> search(String location) {
-		Mono<List<Item>> restaurants = searchTop3NearByRestaurants(location);
-		Mono<List<Item>> stations = searchTop3NearByChargingStations(location);
-		return Mono.zip(restaurants, stations).map(tuple -> new SearchResults(tuple.getT1(), tuple.getT2()));
+
+		return WebClient.builder().build().get()
+				.uri(geolocation_baseURL + "?q={location}&apiKey={apiKey}", location, apiKey)
+					.retrieve()
+					.bodyToFlux(DataWrapper.class)
+					.flatMapIterable(DataWrapper::getItems)
+					.take(1)
+					.collectList()
+					.flatMap(i-> {
+						String position = new StringBuilder(
+							i.get(0).getPosition().getLat() + ","+ 
+									i.get(0).getPosition().getLng()).toString();
+						Mono<List<ResponseItem>> restaurants = searchTop3NearByRestaurants(position);
+						Mono<List<ResponseItem>> stations = searchTop3NearByChargingStations(position);
+						return Mono.zip(restaurants, stations)
+								.map(tuple -> new SearchResults(tuple.getT1(), tuple.getT2()));
+					});
+		
 	}
 
-	private Mono<List<Item>> searchTop3NearByRestaurants(String location) {
+	private Mono<List<ResponseItem>> searchTop3NearByRestaurants(String location) {
 		return rcb.run(
 				clientBuilder.baseUrl(restaurant_service_baseURL).build().get()
 					.uri(ApiConstants.RESTAURANT_URL + location)
@@ -56,12 +75,12 @@ public class SearchService {
 					.take(3)
 					.collectList()
 					.subscribeOn(Schedulers.elastic())
-					.retry(3).timeout(Duration.ofSeconds(2), Mono.just(fallbackRestaurantResponse())),
-				throwable -> Mono.just(fallbackRestaurantResponse()));
+					.retry(3).timeout(Duration.ofSeconds(2), Mono.just(FallBackHelper.fallbackRestaurantResponse())),
+				throwable -> Mono.just(FallBackHelper.fallbackRestaurantResponse()));
 
 	}
 
-	private Mono<List<Item>> searchTop3NearByChargingStations(String location) {
+	private Mono<List<ResponseItem>> searchTop3NearByChargingStations(String location) {
 		return rcb.run(
 				clientBuilder.baseUrl(charging_station_service_baseURL).build().get()
 					.uri(ApiConstants.GAS_STATION_URL + location)
@@ -71,23 +90,9 @@ public class SearchService {
 					.take(3)
 					.collectList()
 					.subscribeOn(Schedulers.elastic())
-					.retry(3).timeout(Duration.ofSeconds(2), Mono.just(fallbackChargingStationResponse())),
-				throwable -> Mono.just(fallbackChargingStationResponse()));
+					.retry(3).timeout(Duration.ofSeconds(2), Mono.just(FallBackHelper.fallbackChargingStationResponse())),
+				throwable -> Mono.just(FallBackHelper.fallbackChargingStationResponse()));
 
 	}
-
-	private List<Item> fallbackChargingStationResponse() {
-		return Arrays.asList(
-				new Item(1L, "Dummy Charging Station 1", true),
-				new Item(2L, "Dummy Charging Station 2", true), 
-				new Item(3L, "Dummy Charging Station 3", true));
-	}
-
-	private List<Item> fallbackRestaurantResponse() {
-		return Arrays.asList(
-				new Item(1L, "Dummy Restaurant1", true), 
-				new Item(2L, "Dummy Restaurant2", true),
-				new Item(3L, "Dummy Restaurant3", true));
-	}
-
+	
 }

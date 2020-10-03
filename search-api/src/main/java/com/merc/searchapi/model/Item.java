@@ -16,6 +16,11 @@ public class Item {
 	@JsonProperty("title")
 	@JsonAlias("name")
 	private String name;
-	private boolean isOpen;
+	private Position position;
 	
+	public Item(Long distance, String name) {
+		this.distance = distance;
+		this.name = name;
+	}
+
 }
