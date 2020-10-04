@@ -1,0 +1,52 @@
+version: "3"
+services:
+    eureka:
+        build:
+            context: ./eureka-naming-server
+            dockerfile: Dockerfile
+        ports: 
+            - "8761:8761"
+    restaurant_service:
+        build:
+            context: ./restaurant-service
+            dockerfile: Dockerfile
+        ports: 
+            - "8801:8801"
+        links:
+            - eureka
+        depends_on:
+            - eureka
+    charging_station_service:
+        build:
+            context: ./charging-station-service
+            dockerfile: Dockerfile
+        ports: 
+            - "8802:8802"
+        links:
+            - eureka
+        depends_on:
+            - eureka
+    parking_spot_service:
+        build:
+            context: ./parking-spot-service
+            dockerfile: Dockerfile
+        ports: 
+            - "8803:8803"
+        links:
+            - eureka
+        depends_on:
+            - eureka
+    search_api:
+        build:
+            context: ./search-api
+            dockerfile: Dockerfile
+        ports: 
+            - "8081:8081"
+        links:
+            - eureka
+        depends_on:
+            - eureka
+            - restaurant_service
+            - charging_station_service
+            - parking_spot_service
+            

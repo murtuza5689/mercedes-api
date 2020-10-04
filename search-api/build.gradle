@@ -35,8 +35,8 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	/*testCompileOnly 'junit:junit:4.12' 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'*/
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'*/
 }
 
 dependencyManagement {
