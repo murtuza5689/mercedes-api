@@ -1,7 +1,7 @@
 # What this APP does?
 - User can search nearby restuarants, charging stations, parking spots by provinding a Place/Location input. For Eg. Starbucks Berlin
 - The app uses HERE MAPS API to fetch 3 closest POI's for each type and displays them in the response.
-- 
+
 # Key Features of the APP
 - It uses Spring Reactive JAVA (Mono, FLux) to call services in asynchronously.
 - All 3 services are called in parallel with results from HERE MAPS API cached.
